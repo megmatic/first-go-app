@@ -8,7 +8,7 @@ import (
 func main() {
 	const conferenceName string = "Go Conference"
 	const numOfTotalTickets  int = 50
-	var numOfRemainingTickets uint = 50
+	var numOfRemainingTickets int = 50
 	var bookings []string
 
 	fmt.Printf("Welcome to %v booking application\n", conferenceName)
@@ -33,7 +33,11 @@ func main() {
 		fmt.Println("How many tickets do you want to reserve: ")
 		fmt.Scan(&userTickets)
 
-		numOfRemainingTickets = numOfRemainingTickets - uint(userTickets);
+		if  userTickets > numOfRemainingTickets {
+			fmt.Printf("We only have %v tickets remaining, so you can't book %v tickets\n", numOfRemainingTickets, userTickets)
+			continue
+		}
+		numOfRemainingTickets = numOfRemainingTickets - userTickets;
 		bookings = append(bookings, firstName + " " + lastName)
 
 		fmt.Printf("Thank you, %v %v, we reserved %v tickets for you.\nYou'll receive a confirmation email at %v shortly.\n", firstName, lastName, userTickets, email)
@@ -46,5 +50,11 @@ func main() {
 		}
 
 		fmt.Printf("The first names of the bookings are: %v\n", firstNames)
+
+		noTicketsRemaining := numOfRemainingTickets == 0
+		if noTicketsRemaining {
+			fmt.Println("Our conference is booked out. Come back next year.")
+			break
+		}
 	}
 }
