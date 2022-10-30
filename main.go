@@ -1,14 +1,14 @@
 package main
 
 import (
-	"strings"
 	"fmt"
+	"strconv"
 )
 
 const conferenceName string = "Go Conference"
 const numOfTotalTickets  int = 50
 var numOfRemainingTickets int = 50
-var bookings []string
+var bookings = make([]map[string]string, 0)
 
 func main() {
 	
@@ -54,8 +54,7 @@ func greetUsers() {
 func printFirstNames() {
 	firstNames := []string{}
 	for _, booking := range bookings {
-		var names = strings.Fields(booking)
-		firstNames = append(firstNames, names[0])
+		firstNames = append(firstNames, booking["firstName"])
 	}
 	for _, name := range firstNames {
 		fmt.Printf("%s\n", name)
@@ -85,7 +84,15 @@ func getUserInput() (string, string, string, int) {
 
 func bookTicket(userTickets int, firstName string, lastName string, email string) {
 	numOfRemainingTickets = numOfRemainingTickets - userTickets;
-	bookings = append(bookings, firstName + " " + lastName)
+
+	var userData = make(map[string]string)
+	userData["firstName"] = firstName
+	userData["lastName"] = lastName
+	userData["email"] = email
+	userData["numOfUserTickets"] = strconv.FormatInt(int64(userTickets), 10)
+
+	bookings = append(bookings, userData)
+	fmt.Printf("List of bookings is %v\n", bookings)
 
 	fmt.Printf("Thank you, %v %v, we reserved %v tickets for you.\nYou'll receive a confirmation email at %v shortly.\n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", numOfRemainingTickets, conferenceName)
